@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, make_response, redirect
 from UserDAO import UserDAO
 from RecipeDAO import RecipeDAO
 from User import User
-from alert import Alert
+from Alert import Alert
 import urllib.parse
 
 app = Flask(__name__)
