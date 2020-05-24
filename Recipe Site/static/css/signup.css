@@ -1,0 +1,40 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 80vh;
+}
+
+h2 {
+    font-size: 40px;
+    margin-bottom: 30px;
+}
+
+form {
+    padding: 30px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+
+.border-suc {
+    border-bottom: 2px solid #27db3f;
+}
+
+.border-fail {
+    border-bottom: 2px solid #ed2d1f;
+}
+
+button {
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    text-align: center;
+    width: 200px;
+    cursor: pointer;
+    background-color: #CFCFEA;
+    font-weight: bolder;
+    font-size: 16px;
+}

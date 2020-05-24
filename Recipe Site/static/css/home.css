@@ -1,0 +1,95 @@
+main {
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    transition: all ease-in-out 0.8s;
+    position: relative;
+}
+
+.bg1 {
+    background: url("../images/bg1.jpg");
+}
+
+.bg2 {
+    background: url("../images/bg2.jpg");
+}
+
+.bg3 {
+    background: url("../images/bg3.jpg");
+}
+
+.bg4 {
+    background: url("../images/bg4.jpg");
+}
+
+.slanted-edge {
+    background-color: rgba(255,255,255,0.5);
+    width: 50%;
+    height: 100%;
+    clip-path: polygon(20% 0, 100% 0, 100% 96%, 0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    float: right;
+}
+
+.transition {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    opacity: 0;
+    transition: all ease-in-out 0.8s;
+}
+
+.sign-in-wrapper {
+    border: 0px solid #27db3f;
+    transition: all ease-in-out 0.6s;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.sign-in-wrapper-active {
+    border: 6px solid #27db3f;
+}
+
+.sign-in-wrapper a {
+    width: 200px;
+    float: none;
+    display: block;
+    top: 0;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+main div form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+main div h2 {
+    font-size: 40px;
+    margin-bottom: 30px;
+}
+
+button {
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    text-align: center;
+    width: 200px;
+    cursor: pointer;
+    background-color: #CFCFEA;
+    font-weight: bolder;
+    font-size: 16px;
+}
+
+

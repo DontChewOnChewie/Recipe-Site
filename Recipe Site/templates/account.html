@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}"/>
+<script type="text/javascript" src="{{ url_for('static', filename='js/account.js') }}"></script>
+<title>Task Master</title>
+{% endblock %}
+
+{% block body %}
+
+<main>
+    This is users {{ user }} page.
+</main>
+
+{% endblock %}
+

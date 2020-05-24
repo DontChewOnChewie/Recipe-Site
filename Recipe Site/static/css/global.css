@@ -1,0 +1,184 @@
+* {
+    padding: 0;
+    margin: 0;
+    color: #735542;
+}
+
+#wrapper {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Alert Stuff */
+
+.alert {
+    width: 300px;
+    position: absolute;
+    top: 200px;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 0 10px 10px 0;
+    opacity: 0;
+    transition: all ease-in-out 0.5s;
+}
+
+.alert div {
+    border-bottom: 2px solid white;
+}
+
+.alert div h3 {
+    display: inline-block;
+    color: white;
+}
+
+.alert div span {
+    margin: 0;
+    float: right;
+    cursor: pointer;
+}
+
+.alert span {
+    display: block;
+    margin-top: 10px;
+    color: white;
+}
+
+.alert-suc {
+    background-color: #27db3f;
+}
+
+.alert-fail {
+    background-color: #ed2d1f;
+}
+
+.alert-info {
+    background-color: #f2f274;
+}
+
+
+/* End of alert stuff */
+
+
+/* Header Stuff */
+header {
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+    padding: 10px;
+    display: inline-block;
+    border-bottom: 2px solid #aaaaaa;
+}
+
+header img {
+    height: 75px;
+    width: 75px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#title-wrapper {
+    position: relative;
+    top: -15px;
+}
+
+#title-wrapper h1, p {
+    display: block;
+}
+
+header div {
+    display: inline-block;
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-wrapper img {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    top: -10px;
+}
+
+header input {
+    display: inline-block;
+    position: relative;
+    padding: 0;
+    top: -18px;
+    margin-left: 40px;
+}
+
+.account-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+    text-align: center;
+    height: 100%;
+}
+
+.account-wrapper .header-btn {
+    top: 0;
+    width: 50%;
+}
+
+.account-wrapper a {
+    text-decoration: none;
+}
+
+.header-btn {
+    color: #444;
+    float: right;
+    margin-right: 15px;
+    position: relative;
+    top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    width: 5%;
+    transition: all ease-in-out 0.3s;
+    cursor: pointer;
+}
+
+.header-btn:hover {
+    color: white;
+    background: #CFCFEA;
+}
+
+#search-results {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 25px;
+    left: 40px;
+    z-index: 5;
+    background-color: red;
+    display: none;
+}
+/* End of header stuff */
+
+/* Start of general styling */
+
+input {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    display: block;
+    padding: 10px;
+    width: 200px;
+    margin-bottom: 10px;
+    background: transparent;
+}
+
+input:focus {
+    border: none;
+    outline: none;
+}
+
+input::placeholder {
+    font-size: 16px;
+}
+
+/* End of general styling */

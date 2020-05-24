@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}"/>
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <div id="wrapper">
+        <header>
+            
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" id="logo" href="/" />
+            <div id="title-wrapper">
+                <h1>Recipe Keeper</h1>
+                <span>Keep track of all your recipes and more.</span>
+            </div>
+    
+            <div class="search-wrapper">
+                <input id="search" type="text" placeholder="Search..."/>
+                <img src="{{ url_for('static', filename='images/search-icon.svg') }}"/>
+                <div id="search-results"></div>
+            </div>
+    
+            {% if signedIn == "true" %}
+                <div class="account-wrapper">
+                    <h3>Welcome <a href="account/{{ user }}">{{ user }}</a></h3>
+                    <a href="/signout" class="header-btn">Sign Out</a>
+                </div>
+            {% else %}
+                <a href="#" class="header-btn">Sign In</a>
+                <a href="/signup" class="header-btn">Sign Up</a>
+            {% endif %}
+    
+        </header>
+
+    {% block body %}{% endblock %}
+
+    </div>
+
+</body>
+</html>

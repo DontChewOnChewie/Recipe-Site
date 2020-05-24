@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}"/>
+<script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
+<title>Task Master</title>
+{% endblock %}
+
+{% block body %}
+
+<main class="bg1">
+    <div class="transition"></div>
+
+    <div class="slanted-edge">
+
+        <div class="sign-in-wrapper">
+            <h2>Get Started Now</h2>
+
+            <form method="POST" action="/login">
+                <input name="username" type="text" placeholder="Username..."/>
+                <input name="password" type="password" placeholder="Password..."/>
+                <button type="submit">Sign In</button>
+            </form>
+            <a href="/signup" class="header-btn">Sign Up</a>
+        </div>
+
+    </div>
+</main>
+
+{% if alert != None %}
+    <script>
+        createAlert("{{ alert.title }}", "{{ alert.body }}", "{{ alert.type }}");
+        openAlert();
+    </script>
+{% endif %}
+
+{% endblock %}
+
