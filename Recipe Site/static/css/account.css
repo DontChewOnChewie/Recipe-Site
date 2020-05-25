@@ -1,0 +1,92 @@
+main {
+    margin-top: 20px;
+}
+
+.content-pain {
+    width: 75%;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 80vh;
+    margin: 0 auto;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+#add-recipe-btn {
+    text-align: center;
+}
+
+#add-recipe-btn h1 {
+    width: 100%;
+    font-size: 50px;
+}
+
+.recipe {
+    width: 80%;
+    height: 200px;
+    background-color: #ebedf0;
+    margin: 0 auto 25px auto;
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    box-shadow: 19px 22px 17px -16px rgba(0,0,0,0.75);
+    border-radius: 18px;
+}
+
+.recipe img {
+    width: 150px;
+    height: 150px;
+}
+
+.recipe-details {
+    margin-left : 30px;
+    width: 100%;
+}
+
+.recipe-details h3 {
+    font-size: 30px;
+}
+
+.recipe-details span {
+    font-size: 18px;
+}
+
+.recipe-attr {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.delete-btn {
+    width: 100px !important;
+    height: 100px !important;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    opacity: 0;
+    transition: all ease-in-out 0.5s;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal p {
+    color: white;
+    font-size: 20px;
+    position: absolute;
+    top: 5%;
+    left: 94%;
+    cursor: pointer;
+}

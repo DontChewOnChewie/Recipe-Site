@@ -8,6 +8,7 @@
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    position: relative;
 }
 
 /* Alert Stuff */
@@ -149,15 +150,34 @@ header input {
 }
 
 #search-results {
-    width: 200px;
+    width: 400px;
     height: 200px;
     position: absolute;
     top: 25px;
     left: 40px;
     z-index: 5;
-    background-color: red;
     display: none;
+    background-color: white;
 }
+
+#search-results a {
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #ccc;
+    display: block;
+}
+
+#search-reults a:last-child {
+    border: none;
+}
+
+#search-results a span {
+    float: right;
+    margin-right: 5px;
+}
+
 /* End of header stuff */
 
 /* Start of general styling */
@@ -173,7 +193,6 @@ input {
 }
 
 input:focus {
-    border: none;
     outline: none;
 }
 

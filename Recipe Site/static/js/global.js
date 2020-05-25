@@ -22,12 +22,7 @@ function getSearchResults(searchTerm) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            let data = this.responseText.split("|");
-            let searchResultString = "";
-            for (var i = 0; i < data.length; i++) {
-                searchResultString += `<p>${data[i]}</p>`
-            }
-            searchResults.innerHTML = searchResultString;
+            searchResults.innerHTML = this.responseText;
         }
     };
 
@@ -77,3 +72,9 @@ function closeAlert() {
         parent.removeChild(alert);
     }, 600); 
 }
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }

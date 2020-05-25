@@ -1,6 +1,6 @@
 let curImg = 1;
 let maxImg = 4;
-let main, transition_div, sign_in_wrapper, btn_login, logo;
+let main, transition_div, sign_in_wrapper, btn_login;
 
 function slideshow() {
     setInterval(function() {

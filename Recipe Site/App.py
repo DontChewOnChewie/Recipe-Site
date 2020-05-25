@@ -3,6 +3,7 @@ from UserDAO import UserDAO
 from RecipeDAO import RecipeDAO
 from User import User
 from Alert import Alert
+from Recipe import Recipe
 import urllib.parse
 
 app = Flask(__name__)
@@ -87,15 +88,46 @@ def searchResult():
         if(param):
             param = urllib.parse.unquote(param)
             dao = RecipeDAO()
-            result = dao.get_searched_recipe(str(param))
-            print(result)
-        return("|".join(result))
+            results = dao.get_searched_recipe(str(param))
+            print(results)
+        
+        returnHTML = ""
+        for result in results:
+            returnHTML += f'<a href="/account/{result[1]}/{result[0].replace(" ", "-")}">{result[0]}<span>{result[1]}</span></a>'
+        return(returnHTML)
 
 @app.route("/account/<user>", methods=['GET'])
 def account(user):
     if request.method == 'GET':
+        dao = RecipeDAO()
+        recipes = dao.get_recipes_for_user(user)
         return render_template("account.html", signedIn = request.cookies.get("signedIn"),
-                                               user = request.cookies.get("user"))
+                                               user = request.cookies.get("user"),
+                                               recipes = recipes)
+
+@app.route("/account/<user>/<recipeName>", methods=['GET'])
+def recipe(user, recipeName):
+    if request.method == 'GET':
+        dao = RecipeDAO()
+        recipe = dao.get_recipe(user, recipeName.replace("-", " "))
+        return render_template("recipe.html", signedIn = request.cookies.get("signedIn"),
+                                               user = request.cookies.get("user"),
+                                               recipe = recipe)
+
+@app.route("/account/<user>/<recipeName>/delete", methods=['DELETE'])
+def recipe_delete(user, recipeName):
+    if request.method == "DELETE":
+        dao = RecipeDAO()
+        dao.delete_recipe(user, recipeName.replace("-", " "))
+        return("Done")
+
+@app.route("/account/<user>/<recipeName>/add", methods=['PUT'])
+def recipe_add(user, recipeName):
+    if request.method == 'PUT':
+        desc = request.args.get("desc")
+        dao = RecipeDAO()
+        dao.add_recipe(user, recipeName, desc)
+        return "Yay"
 
 if __name__ == "__main__":
     app.run(debug=True)

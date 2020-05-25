@@ -8,8 +8,47 @@
 
 {% block body %}
 
+<div class="modal">
+    <p>X</p>
+    <form>
+        <input name="name" type="text" placeholder="Recipe Name..."/>
+        <input name="desc" type="text" placeholder="Recipe Description..."/>
+        <button id="add-btn" type="button">Add</button>
+    </form>
+</div>
+
 <main>
-    This is users {{ user }} page.
+    <div class="content-pain">
+
+        {% if recipes|length < 1 %}
+            <h3>User has no recipes yet!</h3>
+        {% else %}
+
+        <div id="add-recipe-btn" class="recipe">
+            <h1>Add a New Recipe!</h1>
+        </div>
+
+            {% for recipe in recipes %}
+
+                <div class="recipe">
+                    <img src="{{ url_for('static', filename='images/tempRecipe.png') }}"/>
+                    <div class="recipe-details" href="/account/{{ recipe.creator }}/{{ recipe.name.replace(' ', '-') }}">
+                        <h3>{{ recipe.name }}</h3>
+                        <span class="description">{{ recipe.description }}</span>
+
+                        <div class="recipe-attr">
+                            <span class="creator">{{ recipe.creator }}</span>
+                            <span class="id">{{ recipe.id }}</span>
+                        </div>   
+                    </div>
+                    <img src="{{ url_for('static', filename='images/delete.svg') }}" class="delete-btn"/>
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    </div>
 </main>
 
 {% endblock %}

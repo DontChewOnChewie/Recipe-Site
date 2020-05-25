@@ -1,0 +1,16 @@
+main {
+    margin-top: 20px;
+}
+
+.content-pain {
+    width: 75%;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 80vh;
+    margin: 0 auto;
+    background-color: red;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}

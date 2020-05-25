@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/recipe.css') }}"/>
+<script type="text/javascript" src="{{ url_for('static', filename='js/recipe.js') }}"></script>
+<title>Task Master</title>
+{% endblock %}
+
+{% block body %}
+
+<main>
+
+    {% if recipe != None %}
+        {{ recipe.id }}
+        {{ recipe.name}}
+        {{ recipe.description }}
+        {{ recipe.creator }}
+    {% else %}
+
+        <h3>Recipe Doesn't Exist</h3>
+
+    {% endif %}
+
+</main>
+
+{% endblock %}
+
