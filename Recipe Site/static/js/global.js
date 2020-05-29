@@ -1,5 +1,9 @@
 let search, searchResults, logo;
 
+/*
+    Function used in all other JS files on window load.
+    Sets up header and alert systems for every page.
+*/
 function setUpGlobals() {
     search = document.getElementById("search");
     searchResults = document.getElementById("search-results")
@@ -18,6 +22,9 @@ function setUpGlobals() {
     logo.addEventListener("click", function () { window.location = "/"; });
 }
 
+/*
+    Makes an XHR request to populate search results type by user.
+*/
 function getSearchResults(searchTerm) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -30,6 +37,9 @@ function getSearchResults(searchTerm) {
     xhttp.send();
 }
 
+/*
+    Creates an alert and adds it to the page.
+*/
 function createAlert(alert_title, alert_body, alert_type) {
     let wrapper = document.getElementById("wrapper");
 
@@ -58,11 +68,17 @@ function createAlert(alert_title, alert_body, alert_type) {
     wrapper.appendChild(alert);
 }
 
+/*
+    Opens the alert on the page.
+*/
 function openAlert() {
     let alert = document.querySelector(".alert");
     alert.style.opacity = "1";
 }
 
+/*
+    Closes alert on page.
+*/
 function closeAlert() {
     let alert = document.querySelector(".alert");
     alert.style.opacity = "0";
@@ -73,6 +89,9 @@ function closeAlert() {
     }, 600); 
 }
 
+/*
+    Used to get a specific cookie value by its name.
+*/
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);

@@ -2,6 +2,9 @@ let curImg = 1;
 let maxImg = 4;
 let main, transition_div, sign_in_wrapper, btn_login;
 
+/*
+    Start and manage sliedshow.
+*/
 function slideshow() {
     setInterval(function() {
         transition_div.style.opacity = "1";
@@ -17,6 +20,10 @@ function slideshow() {
     }, 5000);
 }
 
+/*
+    Probably be removed for indivudal page.
+    Brings user attetion to log in form on home page.
+*/
 function animateLogInForm() {
     sign_in_wrapper.className = "sign-in-wrapper sign-in-wrapper-active";
     setTimeout(function() {
@@ -24,6 +31,9 @@ function animateLogInForm() {
     }, 1200)
 }
 
+/*
+    Setup events on page and start slideshow.
+*/
 window.onload = function() {
     setUpGlobals();
 

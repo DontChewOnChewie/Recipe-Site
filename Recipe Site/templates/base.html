@@ -27,7 +27,7 @@
     
             {% if signedIn == "true" %}
                 <div class="account-wrapper">
-                    <h3>Welcome <a href="account/{{ user }}">{{ user }}</a></h3>
+                    <h3>Welcome <a href="/account/{{ user }}">{{ user }}</a></h3>
                     <a href="/signout" class="header-btn">Sign Out</a>
                 </div>
             {% else %}

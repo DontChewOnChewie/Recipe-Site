@@ -160,23 +160,27 @@ header input {
     background-color: white;
 }
 
-#search-results a {
-    margin-bottom: 10px;
-    width: 100%;
+#search-results div {
+    border-bottom: 1px solid #ccc;
     padding: 5px;
     box-sizing: border-box;
-    border-bottom: 1px solid #ccc;
-    display: block;
+    margin-bottom: 10px;
+    width: 100%;
 }
 
-#search-reults a:last-child {
-    border: none;
-}
-
-#search-results a span {
+#search-results div a:nth-child(2){
     float: right;
     margin-right: 5px;
 }
+
+#search-results a {
+    display: inline-block;
+}
+
+#search-reults div:last-child {
+    border: none;
+}
+
 
 /* End of header stuff */
 
@@ -198,6 +202,22 @@ input:focus {
 
 input::placeholder {
     font-size: 16px;
+}
+
+.content-pain {
+    width: 75%;
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 80vh;
+    margin: 0 auto;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
+
+textarea {
+    white-space: pre-wrap;
 }
 
 /* End of general styling */

@@ -2,6 +2,9 @@ let userField, passField1, passField2;
 let btnSignup;
 let inputs;
 
+/*
+    Enable button when all the users inputted data is valid.
+*/
 function enableButton() {
     for (var i = 0; i < inputs.length; i++) {
         if (inputs[i].getAttribute("data-valid") == "false") {
@@ -13,6 +16,9 @@ function enableButton() {
     btnSignup.disabled = false;
 }
 
+/*
+    Check usernames length is greater than 5.
+*/
 function checkUsernameLength() {
     if (userField.value.length > 5) {
         userField.className = "border-suc";
@@ -25,6 +31,9 @@ function checkUsernameLength() {
     enableButton();
 }
 
+/*
+    Check password has a special character and a number in it.
+*/
 function checkPasswordStrength() {
     let str = passField1.value;
     if (str.includes("£") || str.includes("!") || str.includes("?") || str.includes("$") ||
@@ -43,6 +52,9 @@ function checkPasswordStrength() {
     enableButton();
 }
 
+/*
+    Check that both inputted passwords match.
+*/
 function checkPasswordMatches() {
     if (passField1.value == passField2.value) {
         passField2.className = "border-suc";
@@ -55,6 +67,9 @@ function checkPasswordMatches() {
     enableButton();
 }
 
+/*
+    Setup page events.
+*/
 window.onload = function() {
     setUpGlobals();
 

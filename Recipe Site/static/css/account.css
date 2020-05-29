@@ -2,18 +2,6 @@ main {
     margin-top: 20px;
 }
 
-.content-pain {
-    width: 75%;
-    overflow: scroll;
-    overflow-x: hidden;
-    height: 80vh;
-    margin: 0 auto;
-}
-
-::-webkit-scrollbar {
-    width: 0;
-}
-
 #add-recipe-btn {
     text-align: center;
 }
@@ -89,4 +77,53 @@ main {
     top: 5%;
     left: 94%;
     cursor: pointer;
+}
+
+form {
+    width: 70%;
+    height: 50%;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+.modal input {
+    width: 100%;
+    color: white;
+    font-size: 20px;
+}
+
+.modal input::placeholder {
+    color: white;
+}
+
+textarea {
+    width: 100%;
+    height: 400px;
+    background-color: transparent;
+    color: white;
+    padding: 10px;
+    font-size: 20px;
+    box-sizing: border-box;
+}
+
+textarea::placeholder {
+    color: white;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+.ingredient-wrapper input {
+    width: 30%;
+    display: inline-block;
+}
+
+.ingredient-wrapper input[type="checkbox"] {
+    width: 5%;
+}
+
+.ingredient-wrapper button {
+    padding: 10px;
+    float: right;
 }

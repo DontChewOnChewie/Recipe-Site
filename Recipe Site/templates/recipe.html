@@ -9,17 +9,37 @@
 {% block body %}
 
 <main>
+        {% if recipe != None %}
+            <div class="content-pain">
+                <h1>{{ recipe.name}}</h1>
+                <p>{{ recipe.description }}</p>
+                <span>{{ recipe.id }}:<a href="/account/{{ recipe.creator }}">{{ recipe.creator }}</a></span>
+            </div>
 
-    {% if recipe != None %}
-        {{ recipe.id }}
-        {{ recipe.name}}
-        {{ recipe.description }}
-        {{ recipe.creator }}
-    {% else %}
+            <div class="ingredients">
 
-        <h3>Recipe Doesn't Exist</h3>
+                <h2>Required</h2>
+                {% for key, val in recipe.ingredients["needed"].items() %}
+                    <div class="ingredient-wrapper">
+                        <h3>{{key}}</h3>
+                        <span>{{val}}</span>
+                    </div>  
+                {% endfor %}
 
-    {% endif %}
+                <h2>Optional</h2>
+                {% for key, val in recipe.ingredients["optional"].items() %}
+                    <div class="ingredient-wrapper">
+                        <h3>{{key}}</h3>
+                        <span>{{val}}</span>
+                    </div>
+                {% endfor %}
+
+            </div>
+        {% else %}
+
+            <h3>Recipe Doesn't Exist</h3>
+
+        {% endif %}
 
 </main>
 
