@@ -105,3 +105,21 @@ class RecipeDAO:
                         VALUES (?, ?, ?, ?)", (id, recipeName, recipeDesc, recipeIngr))
         connection.commit()
         connection.close()
+
+    '''
+    Get Recipe from a given recipe ID
+    '''
+    def get_recipe_by_id(self, id):
+        connection = sqlite3.connect('recipe.db')
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        cursor.execute("SELECT a.USERNAME, r.ID, r.RECIPE_NAME, r.RECIPE_DESCRIPTION, r.RECIPE_INGREDIENTS \
+                        FROM tbl_recipe r \
+                        JOIN tbl_account a ON a.ID = r.RECIPE_OWNER \
+                        WHERE r.ID = ?", (id,))
+        rows = cursor.fetchall()
+        connection.close()
+
+        if len(rows) > 0:
+            return Recipe(rows[0]['ID'], rows[0]['RECIPE_NAME'], rows[0]['RECIPE_DESCRIPTION'], rows[0]['RECIPE_INGREDIENTS'], rows[0]['USERNAME'])
+        return None

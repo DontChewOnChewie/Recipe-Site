@@ -11,9 +11,18 @@
 <main>
         {% if recipe != None %}
             <div class="content-pain">
-                <h1>{{ recipe.name}}</h1>
+                <div>
+                    <h1>{{ recipe.name }}</h1>
+                    {% if signedIn %}
+                        {% if favourite %}
+                            <img id="favourite" data-fav="true" src="{{ url_for('static', filename='images/fav-on.svg') }}"/>
+                        {% else %}
+                            <img id="favourite" data-fav="false" src="{{ url_for('static', filename='images/fav-off.svg') }}"/>
+                        {% endif %}
+                    {% endif %}
+                </div>
                 <p>{{ recipe.description }}</p>
-                <span>{{ recipe.id }}:<a href="/account/{{ recipe.creator }}">{{ recipe.creator }}</a></span>
+                <span id="id">{{ recipe.id }}:<a href="/account/{{ recipe.creator }}">{{ recipe.creator }}</a></span>
             </div>
 
             <div class="ingredients">

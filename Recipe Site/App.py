@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, make_response, redirect
 from UserDAO import UserDAO
 from RecipeDAO import RecipeDAO
+from FavouriteDAO import FavouriteDAO
 from User import User
 from Alert import Alert
 from Recipe import Recipe
@@ -86,7 +87,7 @@ Delete needed cookies to protect other accounts.
 def signout():
     if request.method == 'GET':
         resp = make_response(redirect("/"))
-        resp.set_cookie("signedIn", "false")
+        resp.delete_cookie("signedIn")
         resp.delete_cookie("user")
         resp.delete_cookie("session_key")
         return resp
@@ -182,12 +183,16 @@ def recipe(user, recipeName):
         dao = RecipeDAO()
         recipe = dao.get_recipe(user, recipeName.replace("-", " "))
 
+        fdao = FavouriteDAO()
+        favourited = fdao.check_if_favourited(request.cookies.get("user"), user, recipeName.replace("-", " "))
+        
         if not recipe:
             return render_template("errors/recipe_not_found.html")
 
         return render_template("recipe.html", signedIn = request.cookies.get("signedIn"),
                                                user = request.cookies.get("user"),
-                                               recipe = recipe)
+                                               recipe = recipe,
+                                               favourite = favourited)
 
 '''
 Delete recipe.
@@ -232,6 +237,63 @@ def recipe_add(user, recipeName):
             return "Y"  
         else:
             return "N"
+
+'''
+Retrieve uses favourites for account filter.
+
+Have to reference recipe get as [0] as sql returns tuple with one value.
+'''
+@app.route("/account/<user>/favourites", methods=['GET'])
+def favourites(user):
+    fdao = FavouriteDAO()
+    ids = fdao.get_users_favourites_recipe_ids(user)
+
+    rdao = RecipeDAO()
+    recipes = ""
+    for id in ids:
+        recipe = rdao.get_recipe_by_id(id[0]) 
+        if recipe:
+            recipes = recipes + f"{recipe.name}|{recipe.description}|{recipe.creator}|{recipe.id}|||"
+    return recipes
+
+'''
+Add a recipe to be a users favourite.
+
+Added by clicking star on recipe page through XHR request.
+'''
+@app.route("/account/<user>/<recipeName>/favourites/add", methods=['PUT'])
+def favourite_add(user, recipeName):
+    if request.method == 'PUT':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            recipe_id = request.args.get("recipe")
+            print(recipe_id)
+            fdao = FavouriteDAO()
+            result = "Y" if fdao.add_favourite(request.cookies.get("user"), recipe_id) else "N"
+            return result
+        
+        return "N"
+
+'''
+Delete a recipe to be a users favourite.
+
+Deleted by clicking star on recipe page through XHR request.
+'''
+@app.route("/account/<user>/<recipeName>/favourites/delete/<recipeID>", methods=['DELETE'])
+def favourite_delete(user, recipeName, recipeID):
+    if request.method == 'DELETE':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            fdao = FavouriteDAO()
+            result = "Y" if fdao.delete_favourite(request.cookies.get("user"), recipeID) else "N"
+            return result
+
+    return "N"
+    
 
 @app.errorhandler(404)
 def page_not_found(e):

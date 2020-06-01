@@ -40,10 +40,18 @@ CREATE TABLE tbl_logs (
 	REQ_TIME VARCHAR2(50)
 );
 
+CREATE TABLE tbl_favourite (
+	ID INTEGER PRIMARY KEY AUTOINCREMENT,
+	USER_ID INTEGER,
+	RECIPE_ID INTEGER,
+	FOREIGN KEY(USER_ID) REFERENCES tbl_account(ID),
+	FOREIGN KEY(RECIPE_ID) REFERENCES tbl_recipe(ID)
+);
+
 
 /*
 ---||||||| USER DAO |||||||---
-/*
+*/
 
 /* Check if a user with username already exists
 	(check_user_exists) */
@@ -85,7 +93,7 @@ WHERE USERNAME = ('Given Username') AND PASSWORD = ('Given Password')
 
 /*
 ---||||||| RECIPE DAO |||||||---
-/*
+*/
 
 /* Get Recipes for search results 
 	(get_searched_recipe) */
@@ -122,3 +130,35 @@ WHERE ID = ('ID got from function above');
 	(add_recipe) */
 INSERT INTO tbl_recipe (RECIPE_OWNER, RECIPE_NAME, RECIPE_DESCRIPTION, RECIPE_INGREDIENTS)
 VALUES ('ID from function above', 'Given Recipe Name', 'Given Description', 'Given Ingredients');
+
+/* Get Recipe by ID
+	(get_recipe_by_id) */
+SELECT a.USERNAME, r.ID, r.RECIPE_NAME, r.RECIPE_DESCRIPTION, r.RECIPE_INGREDIENTS
+FROM tbl_recipe r
+JOIN tbl_account a ON a.ID = r.RECIPE_OWNER
+WHERE r.ID = ('Given ID')
+
+/*
+---||||||| Favourite DAO |||||||---
+*/
+
+/* Get recipe ID's of users favourite recipes
+	(get_users_favourites_recipe_ids) */
+SELECT RECIPE_ID
+FROM tbl_favourite 
+WHERE USER_ID = ('Given ID');
+
+/* Add new favourite item for user
+	(add_favourite) */
+INSERT INTO tbl_favourite (USER_ID, RECIPE_ID)
+VALUES ('Given User ID', 'Given Recipe ID')
+
+/* Check if recipe is a users favourite
+	(check_if_favourited) */
+SELECT * FROM tbl_favourite
+WHERE USER_ID = ('Given user id') AND RECIPE_ID = ('Given recipe id')
+
+/* Delete favourite for user
+	(delete_favourite) */
+DELETE FROM tbl_favourite
+WHERE USER_ID = ('Given user ID') AND RECIPE_ID = ('Given recipe ID')

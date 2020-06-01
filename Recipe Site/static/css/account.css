@@ -127,3 +127,38 @@ textarea:focus {
     padding: 10px;
     float: right;
 }
+
+.filter {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.filter ul {
+    margin: 10px 0 15px 0;
+}
+
+.filter li {
+    display: inline-block;
+    margin-right: 20px;
+    padding: 15px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all ease-in-out 0.3s;
+}
+
+.filter li:hover {
+    background-color: #CFCFEA;
+    color: white;
+}
+
+.filter li:last-child {
+    margin-right: 0;
+}
+
+#recipe-wrapper {
+    transition: all ease-in-out 1s;
+}

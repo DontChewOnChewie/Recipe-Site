@@ -40,19 +40,28 @@
             {% endif %}
         {% else %}
 
+        <div class="filter">
+            <ul>
+                <li id="sort-my">My Recipes</li>
+                <li id="sort-fav">Favourites</li>
+                <li id="sort-rec">Recommended</li>
+            </ul>
+        </div>
+
         {% if allowEdit %}
             <div id="add-recipe-btn" class="recipe">
                 <h1>Add a New Recipe!</h1>
             </div>
         {% endif %}
 
-            {% for recipe in recipes %}
+        <div id="recipe-wrapper">
 
+            {% for recipe in recipes %}
                 <div class="recipe">
                     <img src="{{ url_for('static', filename='images/tempRecipe.png') }}"/>
                     <div class="recipe-details" href="/account/{{ recipe.creator }}/{{ recipe.name.replace(' ', '-') }}">
                         <h3>{{ recipe.name }}</h3>
-                        <span class="description">{{ recipe.description }}</span>
+                        <span class="description">{{ recipe.description[:120] + "..." }}</span>
 
                         <div class="recipe-attr">
                             <span class="creator">{{ recipe.creator }}</span>
@@ -65,6 +74,8 @@
                 </div>
 
             {% endfor %}
+
+        </div>
 
         {% endif %}
 

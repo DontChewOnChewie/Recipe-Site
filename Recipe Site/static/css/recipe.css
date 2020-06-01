@@ -12,11 +12,24 @@ main {
     margin-right: 20px;
 }
 
+.content-pain div {
+    width: 100%;
+    border-bottom: 2px solid;
+    margin-bottom: 20px;
+}
+
 .content-pain h1 {
     font-size: 50px;
-    width: 100%;
-    margin-bottom: 20px;
-    border-bottom: 2px solid
+}
+
+.content-pain img {
+    float: right;
+    margin-right: 5px;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    top: -35px;
+    cursor: pointer;
 }
 
 .ingredients {

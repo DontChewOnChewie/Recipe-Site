@@ -1,4 +1,5 @@
-let recipes, delete_btns, add_btn, add_recipe_div, modal, modal_close_btn, form_add, add_ingr_btn;
+let recipes, delete_btns, add_btn, add_recipe_div, modal, modal_close_btn, form_add, add_ingr_btn, btn_sort_fav;
+let recipe_wrapper;
 
 /*
     Makes an XHR request to the delete recipe page and removes the recipe
@@ -89,6 +90,11 @@ function addRecipe() {
 
     http.onreadystatechange = function() {
         if(http.readyState == 4 && http.status == 200) {
+            if (this.responseText == "Y") {
+                new_tile = create_recipe_tile(`${recipe_name}|${recipe_desc}|${recipe_creator}|N/A`);
+                recipe_wrapper.appendChild(new_tile);
+                closeModal();
+            }
         }
     }
     http.send();
@@ -147,6 +153,78 @@ function addNewIngredientField() {
 }
 
 /*
+    Get users favourite recipes and display them.
+*/
+function filter_favourites() {
+    recipe_wrapper.innerHTML = "";
+    var currentPage = window.location.href;
+    var http = new XMLHttpRequest();
+    http.open('GET', `${currentPage}/favourites`, true);
+
+    http.onreadystatechange = function() {
+        if(http.readyState == 4 && http.status == 200) {
+            faves = this.responseText.split("|||");
+            for (var i = 0; i < faves.length; i++) {
+                if (faves[i] != "") {
+                    new_tile = create_recipe_tile(faves[i]);
+                    recipe_wrapper.appendChild(new_tile);
+                }
+            }
+            format_recipe_description_for_web();
+        }
+    }
+    http.send();
+}
+
+/* 
+    Create recipe tiles when user adds and filters recipes.
+*/
+function create_recipe_tile(recipe_info) {
+    recipe = recipe_info.split("|");
+
+    recipeDiv = document.createElement("div");
+    recipeDiv.className = "recipe";
+
+    recipeIcon = document.createElement("img");
+    recipeIcon.src = "/static/images/tempRecipe.png";
+    
+    recipeDetails = document.createElement("div");
+    recipeDetails.className = "recipe-details";
+    recipeDetails.setAttribute("href", `/account/${recipe[2]}/${recipe[0].replace(" ", "-")}`);
+    recipeDetails.addEventListener("click", function () { window.location = this.getAttribute("href"); });
+
+    recipeTitle = document.createElement("h3");
+    recipeTitle.innerText = recipe[0];
+
+    recipeDescription = document.createElement("span");
+    recipeDescription.className = "description";
+    recipeDescription.innerText = recipe[1].substring(0, 120) + "...";
+
+    recipeAttr = document.createElement("div");
+    recipeAttr.className = "recipe-attr";
+
+    recipeCreator = document.createElement("span");
+    recipeCreator.className = "creator";
+    recipeCreator.innerText = recipe[2];
+
+    recipeID = document.createElement("span");
+    recipeID.className = "id";
+    recipeID.innerText = recipe[3];
+
+    recipeAttr.appendChild(recipeCreator);
+    recipeAttr.appendChild(recipeID);
+
+    recipeDetails.appendChild(recipeTitle);
+    recipeDetails.appendChild(recipeDescription);
+    recipeDetails.appendChild(recipeAttr);
+
+    recipeDiv.appendChild(recipeIcon);
+    recipeDiv.appendChild(recipeDetails);
+    return recipeDiv;
+}
+
+
+/*
     Setup events for page and format recipe descriptions.
 */
 window.onload = function () {
@@ -160,6 +238,8 @@ window.onload = function () {
     modal_close_btn = document.querySelector(".modal p");
     form_add = document.querySelector("form");
     add_ingr_btn = document.querySelector(".ingredient-wrapper button");
+    btn_sort_fav = document.getElementById("sort-fav");
+    btn_sort_my = document.getElementById("sort-my");
     
     for (var i = 0; i < recipes.length; i++) {
         recipes[i].addEventListener("click", function () { window.location = this.getAttribute("href"); });
@@ -170,6 +250,10 @@ window.onload = function () {
     if (add_recipe_div != null) add_recipe_div.addEventListener("click", function () { openModal(); });
     modal_close_btn.addEventListener("click", function () { closeModal(); });
     add_ingr_btn.addEventListener("click", function () { addNewIngredientField(); });
+    if (btn_sort_fav != null) btn_sort_fav.addEventListener("click", function () { filter_favourites(); })
+    if (btn_sort_my != null) btn_sort_my.addEventListener("click", function () { window.location = window.location; });
+
+    recipe_wrapper = document.getElementById("recipe-wrapper");
 
     format_recipe_description_for_web();
 }
