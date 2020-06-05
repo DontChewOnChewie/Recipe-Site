@@ -76,6 +76,9 @@ class FavouriteDAO:
         rdao = RecipeDAO()
         recipe_id = rdao.get_recipe_id_from_user_and_name(cursor, owner, recipeName)
 
+        if not user_id or not recipe_id:
+            return False
+
         cursor.execute("SELECT * FROM tbl_favourite \
                         WHERE USER_ID = ? AND RECIPE_ID = ?", (user_id, recipe_id))
         rows = cursor.fetchall()

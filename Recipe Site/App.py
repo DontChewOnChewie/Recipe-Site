@@ -5,6 +5,7 @@ from FavouriteDAO import FavouriteDAO
 from User import User
 from Alert import Alert
 from Recipe import Recipe
+from EmailHandler import EmailHandler
 import urllib.parse
 
 app = Flask(__name__)
@@ -72,7 +73,7 @@ def signup():
         if alertParam:
             alertData = urllib.parse.unquote(alertParam)
             alertData = alertData.split("|")
-            alert = Alert(alertData[0], alertData[1], alertData[2])
+            alert = Alert(alertData[0], alertData[1], alertData[2]) 
 
         resp = make_response(render_template("signup.html", signedIn = request.cookies.get("signedIn"),
                                                             user = request.cookies.get("user"),
@@ -97,7 +98,7 @@ Try log in the user, if no User() object is returned sign in failed.
 If fails return user to home page with alert.
 If succeeds show alert and set assocaited user cookies.
 '''
-@app.route("/login", methods=['POST'])
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -106,13 +107,25 @@ def login():
         user = dao.login_user(username, password)
         
         if user == None:
-            return redirect("/?alert=Sign In Failed!|Make sure the details you entered are correct and try again.|alert-fail")
+            return redirect("/login?alert=Sign In Failed!|Make sure the details you entered are correct and try again.|alert-fail")
         else:
             resp = make_response(redirect("/?alert=Sign In Success|Start creating and browsing awesome recipes.|alert-suc"))
             resp.set_cookie("signedIn", "true")
             resp.set_cookie("user", user.username)
             resp.set_cookie("session_key", user.sessionKey)
             return resp
+    elif request.method == 'GET':
+        alertParam = request.args.get("alert")
+        alert = None
+
+        if alertParam:
+            alertData = urllib.parse.unquote(alertParam)
+            alertData = alertData.split("|")
+            alert = Alert(alertData[0], alertData[1], alertData[2]) 
+
+        return render_template("login.html", signedIn = request.cookies.get("signedIn"),
+                                             user = request.cookies.get("user"),
+                                             alert = alert)
 
 '''
 Used through javascript XHR request to display the search results in the header.
@@ -293,7 +306,129 @@ def favourite_delete(user, recipeName, recipeID):
             return result
 
     return "N"
+
+'''
+Allows users to change their current settings, if email auth is enabled have to
+enter a code that is sent to the email linked to the account.
+
+GET --:--
+signedIn : To decide what the header should include in it.
+user :     To add a link to the header for the users account and 
+           potential avatar for user in the future.
+alert :    Show alert when changing details and entering auth code.
+userobj :  Complete User object for the Users settings.
+
+POST --:--
+If the input code is equal to the one sent to the email the users is
+granted access to the settings page.
+'''
+@app.route("/account/<user>/settings", methods=['GET', 'POST'])
+def account_settings(user):
+    if request.method == 'GET':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(user, request.cookies.get("session_key"))
+
+        if valid_key:
+            alertParam = request.args.get("alert")
+            alert = None
+
+            if alertParam:
+                alertData = urllib.parse.unquote(alertParam)
+                alertData = alertData.split("|")
+                alert = Alert(alertData[0], alertData[1], alertData[2])
+            
+            u = udao.get_user(user)
+
+            if u.email_auth == 1 and u.can_edit_settings == 0 and not alertParam:
+                eh = EmailHandler(u.email)
+                code = eh.send_mail()
+                if code:
+                    udao.set_user_settings_code(u.id, code)
+
+            return render_template("settings.html",
+                                    signedIn = request.cookies.get("signedIn"),
+                                    user = request.cookies.get("user"),
+                                    alert = alert,
+                                    userobj = u)
+        else:
+            return "Not Your Page to Edit"
+    elif request.method == 'POST':
+        inputted_code = request.form['email_auth']
+        udao = UserDAO()
+        actual_code = udao.get_user_settings_code(user)
+
+        if inputted_code == actual_code:
+            udao.allow_edit_settings(user)
+            return redirect(f"/account/{user}/settings")
+        return redirect(f"/account/{user}/settings?alert=Incorrect Code!|Try inputting the code again.|alert-fail")
+
+'''
+Changes the users password if they supply the correct password for the account.
+'''
+@app.route("/account/<user>/settings/changepassword", methods=['POST'])
+def change_password(user):
+    if request.method == 'POST':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            cur_password = request.form['current_pass']
+            new_password = request.form['new_pass']
+
+            creds_correct = udao.check_users_password_matches(user, cur_password)
+            if not creds_correct:
+                return redirect(f"/account/{user}/settings?alert=Password change failed!|The current password you entered was incorrect.|alert-fail")
+            
+            udao.update_password(user, new_password)
+            return redirect(f"/account/{user}/settings?alert=Password changed!|Password has been changed to new password.|alert-suc")
+        
+        return redirect(f"/account/{user}/settings?alert=Password change failed!|Something with your details is incorrect.|alert-fail")
+
+'''
+Activates email authentication for a given account if the password for the account is correct.
+'''
+@app.route("/account/<user>/settings/enableemailauth", methods=['POST'])
+def change_email_auth(user):
+    if request.method == 'POST':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            email = request.form['email']
+            cur_password = request.form['email_pass']
+
+            creds_correct = udao.check_users_password_matches(user, cur_password)
+
+            if not creds_correct:
+                return redirect(f"/account/{user}/settings?alert=Email authentication change failed!|The password you entered is incorrect.|alert-fail")
     
+            udao.enable_email_auth(user, email)
+            return redirect(f"/account/{user}/settings?alert=Email authentication updated!|Successfully changed the status of your email authentication.|alert-suc")
+
+    return redirect(f"/account/{user}/settings?alert=Email authentication change failed!|Something with your details is incorrect.|alert-fail")
+
+'''
+Changes a user email if they have the correct password.
+'''
+@app.route("/account/<user>/settings/changeemail", methods=['POST'])
+def change_email(user):
+    if request.method == 'POST':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            email = request.form['email']
+            cur_password = request.form['email_pass']
+
+            creds_correct = udao.check_users_password_matches(user, cur_password)
+
+            if not creds_correct:
+                return redirect(f"/account/{user}/settings?alert=Email change failed!|The password you entered is incorrect.|alert-fail")
+
+            udao.change_email(user, email)
+            return redirect(f"/account/{user}/settings?alert=Email updated!|Successfully changed email linked to your account.|alert-suc")
+
+        return redirect(f"/account/{user}/settings?alert=Email authentication change failed!|Something with your details is incorrect.|alert-fail")
 
 @app.errorhandler(404)
 def page_not_found(e):

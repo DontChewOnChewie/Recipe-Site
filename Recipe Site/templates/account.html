@@ -27,6 +27,11 @@
 </div>
 
 <main>
+
+    {% if allowEdit %}
+        <img id="settings" src="{{ url_for('static', filename='images/settings.png') }}"/>
+    {% endif %}
+
     <div class="content-pain">
 
         {% if recipes|length < 1 %}

@@ -17,14 +17,6 @@ form {
     border-radius: 10px;
 }
 
-.border-suc {
-    border-bottom: 2px solid #27db3f;
-}
-
-.border-fail {
-    border-bottom: 2px solid #ed2d1f;
-}
-
 button {
     color: white;
     padding: 10px;

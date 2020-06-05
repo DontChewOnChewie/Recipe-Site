@@ -1,5 +1,15 @@
 main {
     margin-top: 20px;
+    position: relative;
+}
+
+#settings {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 92%;
+    top: 2%;
+    cursor: pointer;
 }
 
 #add-recipe-btn {

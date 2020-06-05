@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}"/>
+<script type="text/javascript" src="{{ url_for('static', filename='js/settings.js') }}"></script>
+<title>Task Master</title>
+{% endblock %}
+
+{% block body %}
+
+    <main>
+
+        {% if ( (userobj.email_auth == 1) and (userobj.can_edit_settings == 0) ) %}
+            
+                <div class="email-code">
+                    <h2>An email has been sent to {{ userobj.email }} with a code to edit this page.</h2>
+                    <form method="POST" action="/account/{{ user }}/settings">
+                        <input type="text" name="email_auth" placeholder="Code..."/>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+        {% else %}
+
+            <div class="content-pain">
+
+                <div id="change_password" class="setting-type">
+                
+                    <h3>Change Password</h3>
+
+                    <form method="POST" action="/account/{{ user }}/settings/changepassword">
+                        <input type="password" name="current_pass" placeholder="Current Password..." data-valid="false"/>
+                        <input type="password" name="new_pass" placeholder="New Password..." data-valid="false"/>
+                        <input type="password" name="new_pass_conf" placeholder="Confirm New Password..." data-valid="false"/>
+                        <button id="btn_change_password" type="submit" disabled>Change</button>
+                    </form> 
+                </div>
+                
+                <div id="email_auth" class="setting-type">
+
+                    {% if userobj.email_auth == 0 %}
+                        <h3>Enable Email Authenticaion</h3>
+
+                        <form method="POST" action="/account/{{ user }}/settings/enableemailauth">
+                            <input type="email" name="email" placeholder="Email..."/>
+                            <input type="text" name="email_pass" placeholder="Password..."/>
+                            <button id="btn_email_auth" type="submit" disabled>Setup</button>
+                        </form>
+                    {% else %}
+                        <h3>Change Email for Email Authenticaion</h3>
+
+                        <form method="POST" action="/account/{{ user }}/settings/changeemail">
+                            <input type="email" name="email" placeholder="Email..."/>
+                            <input type="text" name="email_pass" placeholder="Password..."/>
+                            <button id="btn_email_auth" type="submit" disabled>Change Email</button>
+                        </form>
+                    {% endif %}
+                </div>
+
+            </div>
+        {% endif %}
+
+    </main>
+
+
+    {% if alert != None %}
+        <script>
+            createAlert("{{ alert.title }}", "{{ alert.body }}", "{{ alert.type }}");
+            openAlert();
+        </script>
+    {% endif %}
+
+{% endblock %}
+

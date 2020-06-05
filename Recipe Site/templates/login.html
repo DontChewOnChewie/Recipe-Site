@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}"/>
+<title>Task Master</title>
+{% endblock %}
+
+{% block body %}
+<main>
+    <h2>Sign in to your account</h2>
+
+    <form method="POST" action="/login">
+        <input name="username" type="text" placeholder="Username..." data-valid="false"/>
+        <input name="password" type="password" placeholder="Password..." data-valid="false"/>
+        <button type="submit">Sign In</button> 
+    </form>
+</main>
+
+{% if alert != None %}
+    <script>
+        createAlert("{{ alert.title }}", "{{ alert.body }}", "{{ alert.type }}");
+        openAlert();
+    </script>
+{% endif %}
+
+{% endblock %}
+

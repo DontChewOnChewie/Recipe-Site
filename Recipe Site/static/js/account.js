@@ -1,5 +1,5 @@
 let recipes, delete_btns, add_btn, add_recipe_div, modal, modal_close_btn, form_add, add_ingr_btn, btn_sort_fav;
-let recipe_wrapper;
+let recipe_wrapper, settings_btn;
 
 /*
     Makes an XHR request to the delete recipe page and removes the recipe
@@ -240,6 +240,7 @@ window.onload = function () {
     add_ingr_btn = document.querySelector(".ingredient-wrapper button");
     btn_sort_fav = document.getElementById("sort-fav");
     btn_sort_my = document.getElementById("sort-my");
+    settings_btn = document.getElementById("settings");
     
     for (var i = 0; i < recipes.length; i++) {
         recipes[i].addEventListener("click", function () { window.location = this.getAttribute("href"); });
@@ -252,6 +253,7 @@ window.onload = function () {
     add_ingr_btn.addEventListener("click", function () { addNewIngredientField(); });
     if (btn_sort_fav != null) btn_sort_fav.addEventListener("click", function () { filter_favourites(); })
     if (btn_sort_my != null) btn_sort_my.addEventListener("click", function () { window.location = window.location; });
+    if (settings_btn != null) settings_btn.addEventListener("click", function () { window.location = window.location.href + "/settings" });
 
     recipe_wrapper = document.getElementById("recipe-wrapper");
 
