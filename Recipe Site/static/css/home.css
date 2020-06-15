@@ -3,7 +3,6 @@ main {
     width: 100%;
     background-repeat: no-repeat !important;
     background-size: cover !important;
-    transition: all ease-in-out 0.8s;
     position: relative;
 }
 

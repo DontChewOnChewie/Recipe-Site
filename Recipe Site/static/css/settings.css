@@ -63,3 +63,57 @@ button:hover {
     color: white;
     background: #CFCFEA;
 }
+
+button:focus {
+    outline: none;
+}
+
+input[type='file']::-webkit-file-upload-button {
+    width: 100px;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+input[type='file']::-webkit-file-upload-button:focus {
+    outline: none;
+}
+
+.image-upload-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.setting-type img {
+    width: 200px;
+    height: 200px;
+    margin-left: 10px;
+}
+
+#delete_account button {
+    width: 100%;
+    color: white;
+    background-color: #ed2d1f;
+    padding: 15px
+}
+
+.delete_account_check {
+    margin-top: 20px;
+    opacity: 0;
+    transition: all ease-in-out 0.3s;
+}
+
+.delete_account_check div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete_account_check button {
+    display: inline-block;
+    width: 40% !important;
+}

@@ -1,5 +1,6 @@
 let btn_change_pass, btn_email_auth;
 let inp_cur_pas, inp_new_pass, inp_new_pass_conf, inp_email, inp_email_pass;
+let delete_account_check, btn_delete_account, btn_yes, btn_no;
 
 /*
     Code here very similar to that of signup.js basically just making sure that the new password is
@@ -72,6 +73,10 @@ function check_email() {
     }
 }
 
+function fade_delete_account(opacity) {
+    delete_account_check.style.opacity = opacity;
+}
+
 window.onload = function() {
     setUpGlobals();
 
@@ -82,9 +87,18 @@ window.onload = function() {
     inp_new_pass_conf = document.querySelector("input[name='new_pass_conf']");
     inp_email = document.querySelector("input[name='email']");
     inp_email_pass = document.querySelector("input[name='email_pass']");
+    btn_delete_account = document.querySelector("#delete_account button")
+    delete_account_check = document.querySelector(".delete_account_check");
+    btn_no = document.getElementById("no");
+    btn_yes = document.getElementById("yes");
 
-    inp_cur_pas.addEventListener("input", function () { check_cur_password(); });
-    inp_new_pass.addEventListener("input", function () { check_new_password(); });
-    inp_new_pass_conf.addEventListener("input", function () { check_new_password_mathces(); });
-    inp_email.addEventListener("input", function () { check_email(); });
+    if (inp_cur_pas != null) {
+        inp_cur_pas.addEventListener("input", function () { check_cur_password(); });
+        inp_new_pass.addEventListener("input", function () { check_new_password(); });
+        inp_new_pass_conf.addEventListener("input", function () { check_new_password_mathces(); });
+        inp_email.addEventListener("input", function () { check_email(); });
+        btn_delete_account.addEventListener("click", function () { fade_delete_account(1); });
+        btn_no.addEventListener("click", function () { fade_delete_account(0); });
+        btn_yes.addEventListener("click", function () { window.location = `/account/${getCookie("user")}/delete` });
+    }
 }

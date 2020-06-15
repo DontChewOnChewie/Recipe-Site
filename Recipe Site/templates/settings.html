@@ -56,6 +56,36 @@
                     {% endif %}
                 </div>
 
+                <div id="user_bgr" class="setting-type">
+                    <h3>Add a Background Image for your profile</h3>
+
+                    <div class="image-upload-wrapper">
+                        <form method="POST" action="/account/{{ user }}/settings/changebackground" enctype="multipart/form-data">
+                            <input type="file" name="bgr" placeholder="Browse for File"/>
+                            <button type="submit">Upload Image</button>
+                        </form>
+
+                        {% if userobj.background_path != None %}
+                            <img src="{{ userobj.background_path }}"/>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div id="delete_account" class="setting-type">
+
+                    <button type="button">Delete Account</button>
+                    <div class="delete_account_check">
+                        <h3>Are you sure you want to delete your account?</h3>
+
+                        <div>
+                            <button type="button" id="yes">Yes</button>
+                            <button type="button" id="no">No</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
         {% endif %}
 

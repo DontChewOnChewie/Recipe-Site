@@ -9,8 +9,12 @@
     {% block head %}{% endblock %}
 </head>
 <body>
-
+{% if userBackground != None %}
+    <div id="wrapper" style="background:url('{{ userBackground }}')">
+{% else %}
     <div id="wrapper">
+{% endif %}
+
         <header>
             
             <img src="{{ url_for('static', filename='images/logo.svg') }}" id="logo" href="/" />

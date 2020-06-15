@@ -7,6 +7,7 @@ from Alert import Alert
 from Recipe import Recipe
 from EmailHandler import EmailHandler
 import urllib.parse
+import os
 
 app = Flask(__name__)
 
@@ -58,7 +59,7 @@ def signup():
         user = dao.signup_user(username, password)
 
         if not user:
-            resp = make_response(redirect("/signup/?alert=Username is Already Taken|Try another username and sign up again.|alert-fail"))
+            resp = make_response(redirect("/signup?alert=Username is Already Taken|Try another username and sign up again.|alert-fail"))
             return resp
         else:
             resp = make_response(redirect("/?alert=Sign Up Success|Start creating and browsing awesome recipes.|alert-suc"))
@@ -172,6 +173,7 @@ def account(user):
 
         valid_session_key = udao.check_user_session_key(user, request.cookies.get("session_key"))
         allowEdit = False
+        user_bgr = udao.get_user_background(user)
 
         if valid_session_key:
             allowEdit = True
@@ -179,7 +181,8 @@ def account(user):
         return render_template("account.html", signedIn = request.cookies.get("signedIn"),
                                                user = request.cookies.get("user"),
                                                recipes = recipes,
-                                               allowEdit = allowEdit)
+                                               allowEdit = allowEdit,
+                                               userBackground = user_bgr)
 
 '''
 Specified users recipe page.
@@ -341,7 +344,7 @@ def account_settings(user):
 
             if u.email_auth == 1 and u.can_edit_settings == 0 and not alertParam:
                 eh = EmailHandler(u.email)
-                code = eh.send_mail()
+                code = eh.send_settings_code()
                 if code:
                     udao.set_user_settings_code(u.id, code)
 
@@ -429,6 +432,91 @@ def change_email(user):
             return redirect(f"/account/{user}/settings?alert=Email updated!|Successfully changed email linked to your account.|alert-suc")
 
         return redirect(f"/account/{user}/settings?alert=Email authentication change failed!|Something with your details is incorrect.|alert-fail")
+
+'''
+Set a users background for account page only.
+'''
+@app.route("/account/<user>/settings/changebackground", methods=['POST'])
+def set_background(user):
+    if request.method == 'POST':
+
+        file = request.files['bgr']
+
+        if file.filename.endswith(".jpg") | file.filename.endswith(".png") | file.filename.endswith(".svg") | file.filename.endswith(".jpeg"):
+            pass
+        else:
+            return redirect(f"/account/{user}/settings?alert=Background update failed!|Unsupported image type uploaded.|alert-fail")
+
+        file_path = f"static/images/{user}/background.{file.filename.split('.')[-1]}"
+
+        if not os.path.isdir(f"static/images/{user}"):
+            os.mkdir(f"static/images/{user}")
+
+        file.save(file_path)
+        udao = UserDAO()
+        udao.update_user_background(user, "/"+ file_path)
+        return redirect(f"/account/{user}/settings?alert=Background updated!|Successfully updated your background image.|alert-suc")
+
+'''
+Delete users account, recipes, favourites and all other attached data will be deleted
+by a Job Scheduler at the end of each day to tidy database.
+'''
+@app.route("/account/<user>/delete", methods=['GET'])
+def delete_user(user):
+    if request.method == 'GET':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            udao.delete_user(user)
+            resp = make_response(redirect("/"))
+            resp.delete_cookie("signedIn")
+            resp.delete_cookie("user")
+            resp.delete_cookie("session_key")
+            return resp
+    
+        return redirect(f"/account/{user}/settings?alert=Account Delete Failed|Unable to delete your account.|alert-fail")
+
+'''
+Reset a users password.
+
+GET --:--
+email : Accessed via XHR request and used to send an email to the specifed email.
+code : code that was sent in email, usually navigated to through link in email.
+
+POST --:--
+Resets password based on the given code.
+'''
+@app.route("/resetpassword", methods=['GET', 'POST'])
+def reset_password():
+    if request.method == 'GET':
+
+        email = request.args.get("email")
+        code = request.args.get("code")
+
+        if email:
+            eh = EmailHandler(email)
+            code = eh.send_reset_link()
+            udao = UserDAO()
+            udao.update_password_reset_link(email, code)
+        elif code:
+            return render_template("resetpassword.html",
+                                    signedIn = request.cookies.get("signedIn"),
+                                    code = code)
+
+        return render_template("resetpassword.html",
+                                signedIn = request.cookies.get("signedIn"),
+                                code = None)
+    elif request.method == 'POST':
+        password = request.form['pass']
+        code = request.args.get("code")
+        udao = UserDAO()
+        success = udao.reset_password(code, password)
+
+        if success:
+            return redirect("/?alert=Successfully changed password!|Password has been changed for the specified account, sign in with your new details|alert-suc")
+        return redirect("/?alert=Password change unsuccessful!|Some of the details you input must have been inccorect.|alert-fail")
+
 
 @app.errorhandler(404)
 def page_not_found(e):

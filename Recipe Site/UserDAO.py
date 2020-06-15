@@ -53,7 +53,7 @@ class UserDAO:
 
         connection.commit()
         connection.close()
-        return User(0, username, session_key, 0, None, 0)
+        return User(user_id, username, session_key, 0, None, 0, None)
 
     '''
     Update users last sign in after successful login.
@@ -96,7 +96,7 @@ class UserDAO:
             new_key = self.update_user_session_key(rows[0]['ID'], cursor)
             connection.commit()
             connection.close()
-            return User(rows[0]['ID'], rows[0]['USERNAME'], new_key, rows[0]['EMAIL_AUTH'], rows[0]['EMAIL'], rows[0]['CAN_EDIT_SETTINGS'])
+            return User(rows[0]['ID'], rows[0]['USERNAME'], new_key, rows[0]['EMAIL_AUTH'], rows[0]['EMAIL'], rows[0]['CAN_EDIT_SETTINGS'], rows[0]['BACKGROUND_PATH'])
         else:
             connection.close()
             return None
@@ -193,7 +193,8 @@ class UserDAO:
         
         rows = cursor.fetchall()
         if len(rows) > 0:
-            return User(rows[0]['ID'], rows[0]['USERNAME'], rows[0]['CURRENT_SESSION_KEY'], rows[0]['EMAIL_AUTH'], rows[0]['EMAIL'], rows[0]['CAN_EDIT_SETTINGS'])
+            return User(rows[0]['ID'], rows[0]['USERNAME'], rows[0]['CURRENT_SESSION_KEY'], rows[0]['EMAIL_AUTH'], 
+                        rows[0]['EMAIL'], rows[0]['CAN_EDIT_SETTINGS'], rows[0]['BACKGROUND_PATH'])
         return None
     
     '''
@@ -257,3 +258,91 @@ class UserDAO:
         connection.commit()
         connection.close()
 
+    '''
+    Update a users background image.
+    '''
+    def update_user_background(self, user, path):
+        connection = sqlite3.connect('recipe.db')
+        cursor = connection.cursor()
+
+        user_id = self.get_user_id_from_name(cursor, user)
+
+        cursor.execute("UPDATE tbl_account \
+                        SET BACKGROUND_PATH = ? \
+                        WHERE ID = ?", (path, user_id))
+        connection.commit()
+        connection.close()
+    
+    '''
+    Get URL of users account page background.
+    '''
+    def get_user_background(self, user):
+        connection = sqlite3.connect('recipe.db')
+        cursor = connection.cursor()
+
+        user_id = self.get_user_id_from_name(cursor, user)
+
+        cursor.execute("SELECT BACKGROUND_PATH FROM tbl_account \
+                        WHERE ID = ?", (user_id,))
+        rows = cursor.fetchall()
+        if len(rows) > 0:
+            return rows[0][0]
+        return None
+    
+    '''
+    Delete a user from the database.
+    '''
+    def delete_user(self, user):
+        connection = sqlite3.connect('recipe.db')
+        cursor = connection.cursor()
+
+        user_id = self.get_user_id_from_name(cursor, user)
+
+        cursor.execute("DELETE FROM tbl_account \
+                        WHERE ID = ?", (user_id,))
+        connection.commit()
+        connection.close()
+    
+    '''
+    Updates the current password reset link, also used to remove used reset links.
+    '''
+    def update_password_reset_link(self, email, link):
+        connection = sqlite3.connect('recipe.db')
+        cursor = connection.cursor()
+
+        cursor.execute("UPDATE tbl_account \
+                        SET EMAIL_RESET_LINK = ? \
+                        WHERE EMAIL = ?", (link, email))
+        connection.commit()
+        connection.close()
+    
+    '''
+    Used for reseting password from emailed code.
+    '''
+    def get_user_id_from_reset_code(self, cursor, code):
+        cursor.execute("SELECT ID FROM tbl_account \
+                        WHERE EMAIL_RESET_LINK = ?", (code,))
+        rows = cursor.fetchall()
+        if len(rows) > 0:
+            return rows[0][0]
+        return None
+
+    '''
+    Resets user password if valid code is given.
+    '''
+    def reset_password(self, code, password):
+        connection = sqlite3.connect('recipe.db')
+        cursor = connection.cursor()
+
+        user_id = self.get_user_id_from_reset_code(cursor, code)
+        if user_id:
+            cursor.execute("UPDATE tbl_account \
+                            SET PASSWORD = ?, EMAIL_RESET_LINK = ? \
+                            WHERE ID = ?", (self.hash_password(password), None, user_id))
+            connection.commit()
+            connection.close()
+            return True
+        
+        connection.close()
+        return False
+                

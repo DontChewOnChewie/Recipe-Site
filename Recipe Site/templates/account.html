@@ -37,6 +37,15 @@
         {% if recipes|length < 1 %}
 
             {% if allowEdit %}
+
+                <div class="filter">
+                    <ul>
+                        <li id="sort-my">My Recipes</li>
+                        <li id="sort-fav">Favourites</li>
+                        <li id="sort-rec">Recommended</li>
+                    </ul>
+                </div>
+
                 <div id="add-recipe-btn" class="recipe">
                     <h1>Add a New Recipe!</h1>
                 </div>
