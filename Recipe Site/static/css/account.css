@@ -172,3 +172,28 @@ textarea:focus {
 #recipe-wrapper {
     transition: all ease-in-out 1s;
 }
+
+.btn-sub {
+    border-radius: 10px;
+    margin: 0 auto 10px auto;
+    box-sizing: border-box;
+    text-align: center;
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    width: 80%;
+    padding: 10px;
+}
+
+#btn-subscribe {
+    background-color: tomato;
+    color: white;
+}
+
+#btn-unsubscribe {
+    background-color: transparent;
+    color: #CFCFEA;
+    border: solid 1px #ccc;
+}

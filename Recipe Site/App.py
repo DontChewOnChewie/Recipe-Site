@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, make_response, redirect
 from UserDAO import UserDAO
 from RecipeDAO import RecipeDAO
 from FavouriteDAO import FavouriteDAO
+from SubscribeDAO import SubscribeDAO
 from User import User
 from Alert import Alert
 from Recipe import Recipe
@@ -175,6 +176,9 @@ def account(user):
         allowEdit = False
         user_bgr = udao.get_user_background(user)
 
+        sdao = SubscribeDAO()
+        subscribed = sdao.is_subscribed(request.cookies.get("user"), user)
+
         if valid_session_key:
             allowEdit = True
 
@@ -182,7 +186,8 @@ def account(user):
                                                user = request.cookies.get("user"),
                                                recipes = recipes,
                                                allowEdit = allowEdit,
-                                               userBackground = user_bgr)
+                                               userBackground = user_bgr,
+                                               subscribed = subscribed)
 
 '''
 Specified users recipe page.
@@ -517,6 +522,56 @@ def reset_password():
             return redirect("/?alert=Successfully changed password!|Password has been changed for the specified account, sign in with your new details|alert-suc")
         return redirect("/?alert=Password change unsuccessful!|Some of the details you input must have been inccorect.|alert-fail")
 
+'''
+Subscribe to a specific users page.
+Accessed via XHR request however a creator could put their subscribe link
+in a description as well.
+'''
+@app.route("/account/<user>/subscribe", methods=['GET'])
+def subscribe(user):
+    if request.method == 'GET':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            sdao = SubscribeDAO()
+            sdao.subscribe(request.cookies.get("user"), user)
+    
+    return redirect(f"/account/{user}")
+
+'''
+Unsubscribe from a specific users page.
+'''
+@app.route("/account/<user>/unsubscribe", methods=['GET'])
+def unsubscribe(user):
+    if request.method == 'GET':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            sdao = SubscribeDAO()
+            sdao.unsubscribe(request.cookies.get("user"), user)
+    
+    return redirect(f"/account/{user}")
+
+'''
+Get all recipes for a user based on their subscriptions.
+Got through XHR request and displayed in the 'Subscribed' tab of the account page.
+'''
+@app.route("/account/<user>/subscribed")
+def subscribed(user):
+    sdao = SubscribeDAO()
+    subbed_ids = tuple([x[0] for x in sdao.get_subscribed_pages_for_user(user)])
+    print(subbed_ids)
+
+    rdao = RecipeDAO()
+    recipe_ids = rdao.get_subscribed_recipes(subbed_ids)
+    recipes = ""
+    for id in recipe_ids:
+        recipe = rdao.get_recipe_by_id(id) 
+        if recipe:
+            recipes = recipes + f"{recipe.name}|{recipe.description}|{recipe.creator}|{recipe.id}|||"
+    return recipes
 
 @app.errorhandler(404)
 def page_not_found(e):

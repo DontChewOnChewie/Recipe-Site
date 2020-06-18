@@ -30,21 +30,14 @@ CREATE TABLE tbl_favourite (
 	FOREIGN KEY(RECIPE_ID) REFERENCES tbl_recipe(ID)
 );
 
-/* Recipe Ingredients JSON format. */
-/*
-{
-	"ingredients": {
-		"eggs": "2",
-		"flour": "200g",
-		"sugar": "100g",
-		"butter": "100g"
-	},
-
-	"optional": {
-		"chocolate-chips": "100g"
-	}
-}
-*/
+CREATE TABLE tbl_subscribe (
+	ID INTEGER PRIMARY KEY AUTOINCREMENT,
+	USER_ID INTEGER,
+	SUBBED_USER_ID INTEGER,
+	SUBSCRIBE_DATE VARCHAR2(50),
+	FOREIGN KEY(USER_ID) REFERENCES tbl_account(ID),
+	FOREIGN KEY(SUBBED_USER_ID) REFERENCES tbl_account(ID)
+);
 
 CREATE TABLE tbl_logs (
 	ID INTEGER PRIMARY AUTOINCREMENT,

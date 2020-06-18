@@ -42,30 +42,38 @@
                     <ul>
                         <li id="sort-my">My Recipes</li>
                         <li id="sort-fav">Favourites</li>
-                        <li id="sort-rec">Recommended</li>
+                        <li id="sort-sub">Subscribed</li>
                     </ul>
                 </div>
 
                 <div id="add-recipe-btn" class="recipe">
                     <h1>Add a New Recipe!</h1>
                 </div>
+
+                <div id="recipe-wrapper"></div>
             {% else %}
                 <h3>User has no recipes yet!</h3>
             {% endif %}
         {% else %}
 
-        <div class="filter">
-            <ul>
-                <li id="sort-my">My Recipes</li>
-                <li id="sort-fav">Favourites</li>
-                <li id="sort-rec">Recommended</li>
-            </ul>
-        </div>
-
         {% if allowEdit %}
+            <div class="filter">
+                <ul>
+                    <li id="sort-my">My Recipes</li>
+                    <li id="sort-fav">Favourites</li>
+                    <li id="sort-sub">Subscribed</li>
+                </ul>
+            </div>
+
             <div id="add-recipe-btn" class="recipe">
                 <h1>Add a New Recipe!</h1>
             </div>
+        {% else %}
+            {% if subscribed %}
+                <a id="btn-unsubscribe" class="btn-sub" href="">Unsubscribe</a>
+            {% else %}
+                <a id="btn-subscribe" class="btn-sub" href="">Subscribe</a>
+            {% endif %}
         {% endif %}
 
         <div id="recipe-wrapper">

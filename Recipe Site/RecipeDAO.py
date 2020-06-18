@@ -123,3 +123,22 @@ class RecipeDAO:
         if len(rows) > 0:
             return Recipe(rows[0]['ID'], rows[0]['RECIPE_NAME'], rows[0]['RECIPE_DESCRIPTION'], rows[0]['RECIPE_INGREDIENTS'], rows[0]['USERNAME'])
         return None
+    
+    '''
+    Get recipe ids based on a users subscriptions.
+    '''
+    def get_subscribed_recipes(self, user_ids):
+        connection = sqlite3.connect('recipe.db')
+        cursor = connection.cursor()
+
+        recipe_ids = []
+
+        for id in user_ids:
+            cursor.execute("SELECT ID FROM tbl_recipe \
+                            WHERE RECIPE_OWNER = ?", (id,))
+            rows = cursor.fetchall()
+            recipe_ids += [x[0] for x in rows]
+
+        connection.close()
+        recipe_ids.sort(reverse=True)
+        return recipe_ids

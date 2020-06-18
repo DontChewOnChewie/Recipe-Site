@@ -1,5 +1,6 @@
-let recipes, delete_btns, add_btn, add_recipe_div, modal, modal_close_btn, form_add, add_ingr_btn, btn_sort_fav;
+let recipes, delete_btns, add_btn, add_recipe_div, modal, modal_close_btn, form_add, add_ingr_btn, btn_sort_fav, btn_sort_sub;
 let recipe_wrapper, settings_btn;
+let sub_btn, unsub_btn;
 
 /*
     Makes an XHR request to the delete recipe page and removes the recipe
@@ -176,6 +177,31 @@ function filter_favourites() {
     http.send();
 }
 
+/*
+    Get users subscriptions and display them.
+*/
+function filter_sub() {
+    recipe_wrapper.innerHTML = "";
+    var currentPage = window.location.href;
+    var http = new XMLHttpRequest();
+    http.open('GET', `${currentPage}/subscribed`, true);
+
+    http.onreadystatechange = function() {
+        if (http.readyState == 4 && http.status == 200) {
+            subs = this.responseText.split("|||");
+            for (var i = 0; i < subs.length; i++) {
+                if (subs[i] != "") {
+                    new_tile = create_recipe_tile(subs[i]);
+                    recipe_wrapper.appendChild(new_tile);
+                }
+            }
+            format_recipe_description_for_web();
+        }
+    }
+
+    http.send();
+}
+
 /* 
     Create recipe tiles when user adds and filters recipes.
 */
@@ -240,7 +266,11 @@ window.onload = function () {
     add_ingr_btn = document.querySelector(".ingredient-wrapper button");
     btn_sort_fav = document.getElementById("sort-fav");
     btn_sort_my = document.getElementById("sort-my");
+    btn_sort_sub = document.getElementById("sort-sub");
     settings_btn = document.getElementById("settings");
+    sub_btn = document.getElementById("btn-subscribe");
+    unsub_btn = document.getElementById("btn-unsubscribe");
+    recipe_wrapper = document.getElementById("recipe-wrapper");
     
     for (var i = 0; i < recipes.length; i++) {
         recipes[i].addEventListener("click", function () { window.location = this.getAttribute("href"); });
@@ -253,9 +283,9 @@ window.onload = function () {
     add_ingr_btn.addEventListener("click", function () { addNewIngredientField(); });
     if (btn_sort_fav != null) btn_sort_fav.addEventListener("click", function () { filter_favourites(); })
     if (btn_sort_my != null) btn_sort_my.addEventListener("click", function () { window.location = window.location; });
+    if (btn_sort_sub != null) btn_sort_sub.addEventListener("click", function () { filter_sub(); });
     if (settings_btn != null) settings_btn.addEventListener("click", function () { window.location = window.location.href + "/settings" });
-
-    recipe_wrapper = document.getElementById("recipe-wrapper");
-
+    if (sub_btn != null) sub_btn.setAttribute("href", window.location.href + "/subscribe");
+    if (unsub_btn != null) unsub_btn.setAttribute("href", window.location.href + "/unsubscribe");
     format_recipe_description_for_web();
 }
