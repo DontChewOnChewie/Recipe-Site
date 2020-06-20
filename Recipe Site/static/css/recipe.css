@@ -12,7 +12,7 @@ main {
     margin-right: 20px;
 }
 
-.content-pain div {
+.recipe-title {
     width: 100%;
     border-bottom: 2px solid;
     margin-bottom: 20px;
@@ -44,4 +44,103 @@ main {
 
 .ingredient-wrapper h3 {
     display: inline-block;
+}
+
+/*
+    Comments styling
+*/
+
+#comment-section {
+    width: 100%;
+    margin-top: 20px;
+}
+
+#comment-section input {
+    display: inline-block;
+    width: 80%;
+    margin-right: 15px 5% 0 0;
+}
+
+#comment-section button {
+    padding: 10px;
+    background-color: #CFCFEA;
+    color: white;
+    outline: none;
+    border-radius: 8px;
+    border: none;
+    width: 10%;
+    cursor: pointer;
+}
+
+#comment-section input {
+    border: none;
+    padding: 0;
+}
+
+.comment-wrapper {
+    border-bottom: solid 1px #ccc;
+    padding: 10px 0;
+    margin-bottom: 10px;
+}
+
+.comment {
+    width: 100%;
+    display: flex;
+}
+
+.comment-details {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-details input {
+    font-size: 18px;
+}
+
+.comment-details span {
+    font-size: 12px;
+}
+
+.comment-details a {
+    display: block;
+    font-size: 12px;
+}
+
+.edited {
+    margin-left: 8px;
+}
+
+.comment-details div {
+    display: flex;
+    flex-direction: row;
+}
+
+.comment-rating {
+    width: 20%;
+    display: flex;
+    float: right;
+    flex-direction: column;
+    align-items: center;
+}
+
+.comment-rating img {
+    width: 20px;
+    height: 20px;
+    top: 0;
+}
+
+.comment-rating span {
+    position: relative;
+    right: 1px;
+}
+
+.comment-actions button {
+    margin-top: 5px;
+    font-size: 12px;
+    padding: 5px !important;
+}
+
+.upvote {
+    transform: rotate(180deg);
 }

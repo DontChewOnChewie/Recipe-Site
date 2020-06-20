@@ -3,6 +3,8 @@ from UserDAO import UserDAO
 from RecipeDAO import RecipeDAO
 from FavouriteDAO import FavouriteDAO
 from SubscribeDAO import SubscribeDAO
+from CommentDAO import CommentDAO
+from Comment import Comment
 from User import User
 from Alert import Alert
 from Recipe import Recipe
@@ -206,6 +208,12 @@ def recipe(user, recipeName):
 
         fdao = FavouriteDAO()
         favourited = fdao.check_if_favourited(request.cookies.get("user"), user, recipeName.replace("-", " "))
+
+        cdao = CommentDAO()
+        comments = cdao.get_comments_for_recipe(request.cookies.get("user"), user, recipeName)
+
+        udao = UserDAO()
+        u = udao.get_user(request.cookies.get("user"))
         
         if not recipe:
             return render_template("errors/recipe_not_found.html")
@@ -213,7 +221,9 @@ def recipe(user, recipeName):
         return render_template("recipe.html", signedIn = request.cookies.get("signedIn"),
                                                user = request.cookies.get("user"),
                                                recipe = recipe,
-                                               favourite = favourited)
+                                               favourite = favourited,
+                                               comments = comments,
+                                               userobj = u)
 
 '''
 Delete recipe.
@@ -572,6 +582,80 @@ def subscribed(user):
         if recipe:
             recipes = recipes + f"{recipe.name}|{recipe.description}|{recipe.creator}|{recipe.id}|||"
     return recipes
+
+'''
+Adds a new comment to a recipe, done through XHR request.
+'''
+@app.route("/account/<user>/<recipeName>/addcomment", methods=['GET'])
+def addComment(user, recipeName):
+    if request.method == 'GET':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            comment = request.args.get("comment")
+
+            if (comment):
+                cdao = CommentDAO()
+                cdao.add_comment(request.cookies.get("user"), user, recipeName, comment)
+        return "Y"
+
+'''
+Removes an exisitng comment from a recipe, done through XHR request.
+'''
+@app.route("/account/<user>/<recipeName>/removecomment", methods=['GET'])
+def removeComment(user, recipeName):
+    if request.method == 'GET':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            cdao = CommentDAO()
+            result = cdao.remove_comment(request.cookies.get("user"), user, recipeName)
+
+            if result:
+                return "Y"
+
+        return "N"
+
+'''
+Edits an existing comment on a recipe, done through XHR request.
+'''
+@app.route("/account/<user>/<recipeName>/editcomment", methods=['GET'])
+def editComment(user, recipeName):
+    if request.method == 'GET':
+        udao = UserDAO()
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            comment = request.args.get("comment")
+
+            if comment:
+                cdao = CommentDAO()
+                result = cdao.edit_comment(request.cookies.get("user"), user, recipeName, comment)
+                if result:
+                    return "Y"
+                    
+        return "N"
+
+'''
+Adds, edits and removes rating, hard work done in CommentsDAO, done through XHR request.
+'''
+@app.route("/account/<user>/<recipeName>/addrating", methods=['GET'])
+def addRating(user, recipeName):
+    if request.method == 'GET':
+        udao = UserDAO();
+        valid_key = udao.check_user_session_key(request.cookies.get("user"), request.cookies.get("session_key"))
+
+        if valid_key:
+            comment_id = request.args.get("cid")
+            rating = request.args.get("r")
+            if comment_id and rating:
+                cdao = CommentDAO()
+                result = cdao.add_comment_rating(request.cookies.get("user"), comment_id, int(rating))
+                return str(result)
+        return "N"
+
 
 @app.errorhandler(404)
 def page_not_found(e):

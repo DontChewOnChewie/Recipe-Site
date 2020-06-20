@@ -11,7 +11,7 @@
 <main>
         {% if recipe != None %}
             <div class="content-pain">
-                <div>
+                <div class="recipe-title">
                     <h1>{{ recipe.name }}</h1>
                     {% if signedIn %}
                         {% if favourite %}
@@ -23,6 +23,17 @@
                 </div>
                 <p>{{ recipe.description }}</p>
                 <span id="id">{{ recipe.id }}:<a href="/account/{{ recipe.creator }}">{{ recipe.creator }}</a></span>
+
+                <div id="comment-section">
+                    <h2>Comments</h2>
+
+                    <input id="inp-comment" type="text" name="comment" placeholder="Leave a Comment..."/>
+                    <button id="btn-post" type="button">Post</button>
+
+                    {% for comment in comments %}
+                        {% include 'comment.html' %}
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="ingredients">
