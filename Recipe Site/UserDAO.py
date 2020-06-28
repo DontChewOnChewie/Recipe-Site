@@ -345,4 +345,22 @@ class UserDAO:
         
         connection.close()
         return False
+    
+    '''
+    Check Admin credentials
+    '''
+    def check_admin(self, user, session_key):
+        connection = sqlite3.connect('recipe.db')
+        cursor = connection.cursor()
+
+        user_id = self.get_user_id_from_name(cursor, user)
+        valid_key = self.check_user_session_key(user, session_key)
+
+        if valid_key:
+            cursor.execute("SELECT ADMIN_USER FROM tbl_account \
+                            WHERE ID = ?", (user_id,))
+            admin = cursor.fetchall()[0][0]
+            if admin == 1:
+                return True
+        return False
                 

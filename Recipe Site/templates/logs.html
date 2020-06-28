@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/logs.css') }}"/>
+<script type="text/javascript" src="{{ url_for('static', filename='js/logs.js') }}"></script>
+<title>Task Master</title>
+{% endblock %}
+
+{% block body %}
+
+<main>
+
+    <div class="content-pain">
+        <div class="filter-wrapper">
+
+            <h3>Filter : </h3>
+
+            <select id="type">
+                <option selected disabled hidden>Type</option>
+                <option value="SIGN-IN">SIGN-IN</option>
+                <option value="SIGN-UP">SIGN-UP</option>
+                <option value="SIGN-OUT">SIGN-OUT</option>
+            </select>
+
+            <select id="status">
+                <option selected disabled hidden>Status</option>
+                <option value="1">True</option>
+                <option value="0">False</option>
+            </select>
+
+            <input id="url" name="inp_url" placeholder="Search URL..." type="text"/>
+            <input id="ip" name="inp_ip" placeholder="Search IP..." type="text"/>
+            <input id="user-agent" name="inp_user_agent" placeholder="Search User Agent..." type="text"/>
+
+        </div>
+
+    <table>
+            <tr>
+                <th>ID</th>
+                <th>User ID</th>
+                <th>Type</th>
+                <th>IP</th>
+                <th>Port</th>
+                <th>URL</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>User Agent</th>
+                <th>Host</th>
+            </tr>
+            {% for log in logs %}
+                <tr>
+                    <td>{{ log.id }}</td>
+                    <td>{{ log.user_id }}</td>
+                    <td>{{ log.type }}</td>
+                    <td>{{ log.ip }}</td>
+                    <td>{{ log.port }}</td>
+                    <td>{{ log.url }}</td>
+                    <td>{{ log.date }}</td>
+                    <td>{{ log.status }}</td>
+                    <td>{{ log.user_agent }}</td>
+                    <td>{{ log.host }}</td>
+                </tr>
+            {% endfor %}
+
+    </table> 
+   </div>
+</main>
+
+
+{% endblock %}
+

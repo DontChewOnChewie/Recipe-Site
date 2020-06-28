@@ -78,6 +78,7 @@ main {
     transition: all ease-in-out 0.5s;
     justify-content: center;
     align-items: center;
+    z-index: 2;
 }
 
 .modal p {
